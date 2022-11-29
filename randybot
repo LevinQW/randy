@@ -1,0 +1,188 @@
+import random
+import time
+from telebot import types
+import telebot
+
+bot = telebot.TeleBot('5707350450:AAFUKPpi8HG-Gz0pNfx9Cflw2MZ-2E35e8c')
+
+@bot.message_handler(commands=['start', 'help'])
+def start(message):
+    markup = types.InlineKeyboardMarkup()
+    buttonA = types.InlineKeyboardButton('Монета🪙', callback_data='a')
+    buttonB = types.InlineKeyboardButton('Куб🎲', callback_data='b')
+    buttonC = types.InlineKeyboardButton('Магический шар🎱', callback_data='mb')
+    buttonD = types.InlineKeyboardButton('Слоты', callback_data='slots')
+    markup.row(buttonA, buttonB)
+    markup.row(buttonC, buttonD)
+    bot.send_message(message.chat.id, 'Главное меню!', parse_mode='html', reply_markup=markup, )
+
+
+@bot.message_handler(content_types=['text'])
+def text(message):
+    if message.text == 'Привет':
+        bot.send_message(message.chat.id, '<b>Привет!</b>', parse_mode='html' )
+
+    else:
+        bot.send_message(message.chat.id, '<b>Я тебя не понимаю, напиши /help </b>', parse_mode='html')
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def handle(call):
+     if call.data == 'a' or call.data == 'c':
+        wa = types.InlineKeyboardMarkup()
+        buttonA = types.InlineKeyboardButton('...', callback_data='null')
+
+        wa.row(buttonA)
+
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='🪙Бросаю', reply_markup=wa)
+        time.sleep(0.1)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='🪙Бросаю.', reply_markup=wa)
+        time.sleep(0.1)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='🪙Бросаю..', reply_markup=wa)
+        time.sleep(0.1)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='🪙Бросаю...', reply_markup=wa)
+
+
+        num = random.randint(1, 2)
+
+        time.sleep(0.3)
+
+        if num == 1:
+             markup = types.InlineKeyboardMarkup()
+             buttonA = types.InlineKeyboardButton('Еще раз...', callback_data='c')
+             buttonB = types.InlineKeyboardButton('Меню', callback_data='menu')
+             markup.row(buttonB, buttonA)
+             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='🦅Орел!', reply_markup=markup)
+
+             #bot.send_message(call.message.chat.id, 'Выпал <b>Орел!</b>', parse_mode='html', reply_markup=markup)
+        elif num == 2:
+            markup = types.InlineKeyboardMarkup()
+            buttonA = types.InlineKeyboardButton('Еще раз...', callback_data='c')
+            buttonB = types.InlineKeyboardButton('Меню', callback_data='menu')
+            markup.row(buttonB, buttonA)
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='🪙Решка!', reply_markup=markup)
+
+            #bot.send_message(call.message.chat.id, 'Выпало <b>Решка!</b>', parse_mode='html', reply_markup=markup)
+     elif call.data == 'b' or call.data == 'd':
+        markup = types.InlineKeyboardMarkup()
+        buttonA = types.InlineKeyboardButton('Еще раз...', callback_data='d')
+        buttonB = types.InlineKeyboardButton('Меню', callback_data='menu')
+        markup.row(buttonB, buttonA)
+
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='🎲Бросаю')
+        time.sleep(0.1)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='🎲Бросаю.')
+        time.sleep(0.1)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='🎲Бросаю..')
+        time.sleep(0.1)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='🎲Бросаю...')
+
+        time.sleep(0.3)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='<b>Выпало:</b> ' + str(random.randint(1, 6)), parse_mode='html', reply_markup=markup)
+
+     elif call.data == 'menu':
+
+        markup = types.InlineKeyboardMarkup()
+        buttonA = types.InlineKeyboardButton('Монета🪙', callback_data='a')
+        buttonB = types.InlineKeyboardButton('Куб🎲', callback_data='b')
+        buttonC = types.InlineKeyboardButton('Магический шар🎱', callback_data='mb')
+        buttonD = types.InlineKeyboardButton('Слоты🎰', callback_data='slots')
+        markup.row(buttonA, buttonB)
+        markup.row(buttonC, buttonD)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Главное меню!', reply_markup=markup)
+
+     elif call.data == 'mb':
+         mbinfo = types.InlineKeyboardMarkup()
+         buttonA = types.InlineKeyboardButton('Меню', callback_data='menu')
+         buttonB = types.InlineKeyboardButton('Трясти', callback_data='shake')
+         mbinfo.row(buttonA, buttonB)
+         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='<b>Магический шар</b> - это шар, отвечающий на вопросы односложными ответами (да, нет и т.д.). Для игры скажи вслух или про себя вопрос и нажми на "Трясти"👇', parse_mode='html', reply_markup=mbinfo)
+
+     elif call.data == 'shake':
+         shake = types.InlineKeyboardMarkup()
+         buttonA = types.InlineKeyboardButton('...', callback_data='null')
+         shake.row(buttonA)
+         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Трясу', reply_markup=shake)
+         time.sleep(0.1)
+         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Трясу.', reply_markup=shake)
+         time.sleep(0.1)
+         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Трясу..', reply_markup=shake)
+         time.sleep(0.1)
+         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Трясу...', reply_markup=shake)
+         time.sleep(0.3)
+
+         markup = types.InlineKeyboardMarkup()
+         buttonA = types.InlineKeyboardButton('Трясти', callback_data='shake')
+         buttonB = types.InlineKeyboardButton('Меню', callback_data='menu')
+         markup.row(buttonB, buttonA)
+
+         answer = random.randint(1, 9)
+         if answer == 1:
+             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text= 'Шар ответил: <b>Да</b>', parse_mode='html', reply_markup=markup)
+
+         elif answer == 2:
+             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Шар ответил: <b>Думаю да</b>', parse_mode='html', reply_markup=markup)
+         elif answer == 3:
+             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Шар ответил: <b>100% Да</b>', parse_mode='html', reply_markup=markup)
+         elif answer == 4:
+             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Шар ответил: <b>Нет</b>', parse_mode='html', reply_markup=markup)
+         elif answer == 5:
+             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Шар ответил: <b>Точно нет</b>', parse_mode='html', reply_markup=markup)
+         elif answer == 6:
+             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Шар ответил: <b>Скорее всего нет</b>', parse_mode='html', reply_markup=markup)
+         elif answer == 7:
+             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Шар ответил: <b>Не факт</b>', parse_mode='html', reply_markup=markup)
+         elif answer == 8:
+             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Шар ответил: <b>Незнаю</b>', parse_mode='html', reply_markup=markup)
+         elif answer == 9:
+             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Шар ответил: <b>Сложный вопрос</b>', parse_mode='html', reply_markup=markup)
+
+
+     elif call.data == 'slots':
+         num1 = random.randint(1, 3)
+         num2 = random.randint(1, 3)
+         num3 = random.randint(1, 3)
+#🍋🎱🍀🍒💵
+         if num1 == 1:
+             f = "🍋"
+         elif num1 == 2:
+             f = "🍀"
+         elif num1 == 3:
+             f = "🍒"
+
+
+         if num2 == 1:
+             f2 = "🍋"
+         elif num2 == 2:
+             f2 = "🍀"
+         elif num2 == 3:
+             f2 = "🍒"
+
+
+         if num3 == 1:
+             f3 = "🍋"
+         elif num3 == 2:
+             f3 = "🍀"
+         elif num3 == 3:
+             f3 = "🍒"
+
+
+         markup = types.InlineKeyboardMarkup()
+         buttonA = types.InlineKeyboardButton('Крутить еще...', callback_data='slots')
+         buttonB = types.InlineKeyboardButton('Меню', callback_data='menu')
+         markup.row(buttonB)
+         markup.row(buttonA)
+
+         wait = types.InlineKeyboardMarkup()
+
+         buttonB = types.InlineKeyboardButton('...', callback_data='null')
+         wait.row(buttonB)
+
+
+         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f, parse_mode='html', reply_markup=wait)
+         time.sleep(1)
+         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f + f2, parse_mode='html', reply_markup=wait)
+         time.sleep(1)
+         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f + f2 + f3, parse_mode='html', reply_markup=markup)
+
+bot.polling(none_stop=True)
